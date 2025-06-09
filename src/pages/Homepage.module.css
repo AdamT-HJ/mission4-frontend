@@ -1,0 +1,102 @@
+.outsideAiContainer {
+  background-color: white;
+  width: 70%;
+  height: 100%;
+  display: flex;
+  position: absolute;
+  right: 15%;
+  top: 10.4%;
+}
+
+.interviewWrapper {
+  background-color: white;
+  display: flex;
+  position: absolute;
+  width: 75%;
+  height: 60%;
+  right: 15%;
+  top: 5%;
+}
+
+.jobTitleInput {
+  display: flex;
+  position: absolute;
+  width: 35%;
+  height: 8%;
+  right: 11%;
+  top: 5%;
+  border: #cdc9c8 solid 1px;
+}
+
+.userSessionIdInput {
+  display: flex;
+  position: absolute;
+  width: 15%;
+  height: 4%;
+  right: 71%;
+  top: 9%;
+  border: #cdc9c8 solid 1px;
+}
+
+.currentID {
+  display: flex;
+  position: absolute;
+  bottom: 9%;
+  right: 79%;
+}
+
+.jobTitleInput::placeholder {
+}
+
+.mainChatContainer {
+  display: flex;
+  position: absolute;
+  top: 15%;
+  right: 11%;
+  width: 75%;
+  height: 60%;
+  border: #cdc9c8 solid 1px;
+}
+
+.chatBox {
+  display: flex;
+  position: absolute;
+  top: 77%;
+  right: 11%;
+  width: 75%;
+  height: 8%;
+  border: #cdc9c8 solid 1px;
+}
+
+.submitButton {
+  display: flex;
+  position: absolute;
+  width: 16%;
+  height: 6%;
+  top: 86%;
+  right: 11%;
+  border-radius: 10px 10px 10px 10px;
+  font-size: 17px;
+  color: white;
+  justify-content: center;
+  align-items: center;
+  background-color: #33b221;
+  border: #cdc9c8 solid 1px;
+}
+
+.sessionIdSubmitButton {
+  display: flex;
+  position: absolute;
+  width: 15%;
+  height: 5%;
+  top: 9%;
+  right: 55%;
+  border-radius: 10px 10px 10px 10px;
+  font-size: 17px;
+  color: white;
+  justify-content: center;
+  align-items: center;
+  background-color: #33b221;
+  border: #cdc9c8 solid 1px;
+  font-size: 12px;
+}
