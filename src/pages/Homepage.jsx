@@ -3,6 +3,8 @@ import styles from './Homepage.module.css'
 import axios from 'axios';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import turnersHeader from '../assets/turners-header.png';
+import turnersFooter from '../assets/turners-footer.png';
 
 export default function Homepage() {
   // variables for sessionID
@@ -17,6 +19,7 @@ export default function Homepage() {
   const [error, setError] = useState(null);
 
   const scrollChatToCurrent = useRef(null);
+  const chatInputRef = useRef(null);
 
   const backendUrl = 'http://localhost:5000'; // Ensure this matches your backend's port
 
@@ -25,7 +28,11 @@ export default function Homepage() {
     if (scrollChatToCurrent.current) {
       scrollChatToCurrent.current.scrollTop = scrollChatToCurrent.current.scrollHeight;
     }
-  }, [sessionChat]);
+
+    if (!isLoading && activeSessionId && chatInputRef.current) {
+      chatInputRef.current.focus();
+    }
+  }, [sessionChat, isLoading, activeSessionId]);
 
   //Original function to format chat, changed for react-markdown package
   // Formats chat for display
@@ -164,6 +171,7 @@ export default function Homepage() {
     setSessionChat(updatedChatForFrontend);
     setUserMessageToChat(""); // Clear input immediately
 
+
     try {
       const response = await axios.post(`${backendUrl}/chat`, {
         sessionId: activeSessionId,
@@ -194,15 +202,28 @@ export default function Homepage() {
       setSessionChat(sessionChat); // Revert chat to previous state if submission fails
     } finally {
       setIsLoading(false);
+      
+      if(chatInputRef.current) {
+      chatInputRef.current.focus();
+      };
     }
   };
 
 
   return (
     <>
-      <header> header </header>
-      <main>
+      <header>
+        <img src={turnersHeader} alt="Turners Header" />
+      </header>
+
+      <main className={styles.main}>
         <div className={styles.outsideAiContainer}>
+          
+          <div className={styles.welcomeText}>
+            <h1>Car Insurance Policies: Chat with Tina</h1>
+            <p>Interested in some advice on what type of car insurance policy best suits you? Chat with Tina to find out, click "start session", or copy in your current Session ID and click "start session" to continue a previous conversation.</p>
+          </div>
+          
           
           <div className={styles.sessionContainer}>
             
@@ -283,6 +304,7 @@ export default function Homepage() {
                 onChange={(e) => setUserMessageToChat(e.target.value)}
                 value={userMessageToChat}
                 disabled={isLoading || !activeSessionId}
+                ref={chatInputRef}
               />
 
               <button
@@ -299,7 +321,9 @@ export default function Homepage() {
         </div>
       </main>
 
-      <footer>Footer</footer>
+      <footer>
+        <img src={turnersFooter} alt="Turners Footer" />
+      </footer>
     </>
   );
 }
