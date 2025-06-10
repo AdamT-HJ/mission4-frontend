@@ -28,7 +28,7 @@ export default function Homepage() {
   // Formats chat for display
   const formatChatForDisplay = () => {
     return sessionChat.map(entry => {
-      const speaker = entry.role === 'user' ? 'You' : 'Advisor';
+      const speaker = entry.role === 'user' ? 'You' : 'Tina';
       return `${speaker}: ${entry.parts[0].text}`;
     }).join('\n\n');
   }
@@ -53,7 +53,7 @@ export default function Homepage() {
         response = await axios.get(`${backendUrl}/session`);
       }
 
-      const { sessionId: receivedSessionId, conversationHistory: loadedHistory, initialGreeting } = response.data;
+      const { sessionId: receivedSessionId, conversationHistory: loadedHistory} = response.data;
 
       setActiveSessionId(receivedSessionId);
 
@@ -74,30 +74,21 @@ export default function Homepage() {
       if (shouldSendInitialMessage) {
         console.log("Sending initial message to chat endpoint for new session...");
         
-        // Define the initial user message that will trigger the AI's first response
-        // You can change "start_conversation" to anything your backend's AI expects as a trigger
+        // Initial message to trigger the AI's first response, will have to filter out for display on front-end
         const initialUserPrompt = { role: "user", parts: [{ text: "start_conversation" }] };
-
-        // Optimistically add this initial prompt to the chat display immediately
-        // This makes the UI feel more responsive
-        // setSessionChat(prevChat => [...prevChat, initialUserPrompt]);
 
         try {
           // Send the request to the /chat endpoint
-          // Include the received session ID and the full conversation (current history + new prompt)
+          // Includes the received session ID and the full conversation (current history + new prompt)
           const chatResponse = await axios.post(`${backendUrl}/chat`, {
             sessionId: receivedSessionId,
-            contents: [...currentChatHistory, initialUserPrompt], // Combine existing history with the new prompt
+            contents: [...currentChatHistory, initialUserPrompt], // Combines existing history with the new prompt
           });
 
-          // Update the frontend chat state with the full conversation history returned from the chat endpoint
-          // This will include the AI's greeting response
-          
-          
+          // Updating the frontend chat state with the full conversation history returned from the chat endpoint
           let returnedConversationHistoryFromChat = chatResponse.data.conversationHistory;
 
-          // --- ADD THE FILTERING CODE HERE ---
-          // This code filters out the "start_conversation" message before updating the UI
+          // Filtering out starting message so wont display in chat
           if (returnedConversationHistoryFromChat.length > 0 &&
               returnedConversationHistoryFromChat[0].role === 'user' &&
               returnedConversationHistoryFromChat[0].parts &&
@@ -106,9 +97,8 @@ export default function Homepage() {
               
               returnedConversationHistoryFromChat = returnedConversationHistoryFromChat.slice(1);
           }
-          // --- END OF FILTERING CODE ---
 
-          // Update the frontend chat state with the FILTERED conversation history
+          // Updating the frontend chat state with the FILTERED conversation history
           setSessionChat(returnedConversationHistoryFromChat);
 
         } catch (chatErr) {
@@ -117,13 +107,9 @@ export default function Homepage() {
           const chatErrorMessage = 'Failed to get initial AI greeting. Please type a message to start.';
           setError(chatErrorMessage);
           alert(chatErrorMessage);
-          // Optionally revert the optimistically added prompt if it failed:
-          // setSessionChat(currentChatHistory); 
+         
         }
       }
-      // --- END NEW LOGIC ---
-
-
 
     } catch (err) {
       console.error("Error starting/loading session:", err);
@@ -141,6 +127,7 @@ export default function Homepage() {
     } finally {
       setIsLoading(false);
     }
+
   };
 
 
@@ -184,8 +171,7 @@ export default function Homepage() {
       
       let returnedConversationHistory = response.data.conversationHistory;
 
-      // Filtering logic to hide the "start_conversation" message here as well,
-      // ensuring it remains hidden on subsequent message submissions.
+      // Filtering again to remove "start_conversation" 
       if (returnedConversationHistory.length > 0 && 
           returnedConversationHistory[0].role === 'user' &&
           returnedConversationHistory[0].parts &&
