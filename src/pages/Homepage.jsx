@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import styles from './Homepage.module.css'
 import axios from 'axios';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function Homepage() {
   // variables for sessionID
@@ -25,13 +27,14 @@ export default function Homepage() {
     }
   }, [sessionChat]);
 
+  //Original function to format chat, changed for react-markdown package
   // Formats chat for display
-  const formatChatForDisplay = () => {
-    return sessionChat.map(entry => {
-      const speaker = entry.role === 'user' ? 'You' : 'Tina';
-      return `${speaker}: ${entry.parts[0].text}`;
-    }).join('\n\n');
-  }
+  // const formatChatForDisplay = () => {
+  //   return sessionChat.map(entry => {
+  //     const speaker = entry.role === 'user' ? 'You' : 'Tina';
+  //     return `${speaker}: ${entry.parts[0].text}`;
+  //   }).join('\n\n');
+  // }
 
   // --- Connecting to the backend ---
 
@@ -196,58 +199,107 @@ export default function Homepage() {
 
 
   return (
-    <div className={styles.outsideAiContainer}>
-      <div className={styles.interviewWrapper}>
-        <form onSubmit={handleSubmit}>
-          {/* jobTitle input and state removed */}
+    <>
+      <header> header </header>
+      <main>
+        <div className={styles.outsideAiContainer}>
+          
+          <div className={styles.sessionContainer}>
+            
+            <input
+              type="text"
+              className={styles.userSessionIdInput}
+              placeholder="Previous Session ID (optional)"
+              onChange={(e) => setSessionIdInput(e.target.value)}
+              disabled={isLoading || activeSessionId}
+              value={sessionIdInput}
+            />
 
-          <input
-            type="text"
-            className={styles.userSessionIdInput}
-            placeholder="Previous Session ID (optional)"
-            onChange={(e) => setSessionIdInput(e.target.value)}
-            disabled={isLoading || activeSessionId}
-            value={sessionIdInput}
-          />
+            <button
+              className={styles.sessionIdSubmitButton}
+              type="button"
+              onClick={submitSessionId}
+              disabled={isLoading || activeSessionId}
+              >
+              Start Session
+            </button>
+          
+            <p className={styles.currentID}> Session ID: {activeSessionId || "No   Session"}
+            </p>
 
-          <textarea
-            ref={scrollChatToCurrent}
-            name="mainChatContainer"
-            className={styles.mainChatContainer}
-            value={formatChatForDisplay()}
-            readOnly
-            rows={15}
-            cols={60}
-            placeholder={activeSessionId ? "Type your message below..." : "To resume your session, enter your Session ID above. To start a new session, leave the Session ID blank and click 'Start Session'."}
-          ></textarea>
+          </div>
+          
+          <div className={styles.interviewWrapper}>
+            <form onSubmit={handleSubmit}>
+              {/* jobTitle input and state removed */}
 
-          <input
-            type="text"
-            className={styles.chatBox}
-            placeholder={activeSessionId ? "Write your message here" : "Start a new Session First"}
-            onChange={(e) => setUserMessageToChat(e.target.value)}
-            value={userMessageToChat}
-            disabled={isLoading || !activeSessionId}
-          />
+              
 
-          <button
-            className={styles.submitButton}
-            type="submit"
-            disabled={isLoading || !activeSessionId || !userMessageToChat.trim()}
-          >
-            {isLoading ? "Sending..." : "Submit Response"}
-          </button>
-        </form>
-        <p className={styles.currentID}>Session ID: {activeSessionId || "No Session"}</p>
-        <button
-          className={styles.sessionIdSubmitButton}
-          type="button"
-          onClick={submitSessionId}
-          disabled={isLoading || activeSessionId}
-        >
-          Start Session
-        </button>
-      </div>
-    </div>
+              {/* old way to render chat - for reference */}
+              {/* <textarea
+                ref={scrollChatToCurrent}
+                name="mainChatContainer"
+                className={styles.mainChatContainer}
+                value={formatChatForDisplay()}
+                readOnly
+                rows={15}
+                cols={60}
+                placeholder={activeSessionId ? "Type your message below..." : "To resume your session, enter your Session ID above. To start a new session, leave the Session ID blank and click 'Start Session'."}
+              ></textarea> */}
+              
+              {/* final way to render chat using react-markdown*/}
+              <div
+                  ref={scrollChatToCurrent}
+                  name="mainChatContainer"
+                  className={styles.mainChatContainer}
+                >
+
+                {sessionChat.map((entry, index) => (
+                <div key={index} className={entry.role === 'user' ? styles.     userMessage : styles.advisorMessage}>
+                  <strong>{entry.role === 'user' ? 'You:' : 'Tina:'}</strong>
+                    {/* Use Markdown component for AI (model) responses */}
+                    {entry.role === 'model' ? (
+                      <Markdown remarkPlugins={[remarkGfm]}>{entry.parts[0].text}</Markdown>
+                    ) : (
+                      // For user messages, renders text in a paragraph
+                  <p>{entry.parts[0].text}</p> 
+                    )}
+                </div>
+                ))}
+
+                {/* Placeholder text for when no session is active */}
+                {!activeSessionId && (
+                  <p className={styles.chatPlaceholder}>
+                    To resume your session, enter your Session ID above. To start a new session, leave the Session ID blank and click 'Start Session'.
+                  </p>
+                )}
+
+              </div>
+              
+              <input
+                type="text"
+                className={styles.chatBox}
+                placeholder={activeSessionId ? "Write your message here" : "Start a new Session First"}
+                onChange={(e) => setUserMessageToChat(e.target.value)}
+                value={userMessageToChat}
+                disabled={isLoading || !activeSessionId}
+              />
+
+              <button
+                className={styles.submitButton}
+                type="submit"
+                disabled={isLoading || !activeSessionId || !userMessageToChat.trim()}
+              >
+                {isLoading ? "Sending..." : "Submit Response"}
+              </button>
+            </form>
+            
+            
+          </div>
+        </div>
+      </main>
+
+      <footer>Footer</footer>
+    </>
   );
 }

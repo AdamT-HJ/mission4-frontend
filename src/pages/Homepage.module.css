@@ -1,102 +1,130 @@
+/* Homepage.module.css */
+
 .outsideAiContainer {
   background-color: white;
-  width: 70%;
-  height: 100%;
+  width: 45vw;
+  height: 650px; /* Example: Use viewport height for overall container */
   display: flex;
-  position: absolute;
   right: 15%;
-  top: 10.4%;
+  top: 5%; /* Adjust top to give space for sessionIdInput above */
+  flex-direction: column; /* Ensure it lays out its children vertically */
+  align-items: center; /* Center content horizontally */
+  border-style: solid;
+  border-width: 1px;
+  border-color: grey;
 }
 
-.interviewWrapper {
-  background-color: white;
+.sessionContainer {
   display: flex;
-  position: absolute;
-  width: 75%;
-  height: 60%;
-  right: 15%;
-  top: 5%;
-}
-
-.jobTitleInput {
-  display: flex;
-  position: absolute;
-  width: 35%;
-  height: 8%;
-  right: 11%;
-  top: 5%;
-  border: #cdc9c8 solid 1px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  width: 95%;
 }
 
 .userSessionIdInput {
   display: flex;
-  position: absolute;
-  width: 15%;
-  height: 4%;
-  right: 71%;
-  top: 9%;
-  border: #cdc9c8 solid 1px;
-}
-
-.currentID {
-  display: flex;
-  position: absolute;
-  bottom: 9%;
-  right: 79%;
-}
-
-.jobTitleInput::placeholder {
-}
-
-.mainChatContainer {
-  display: flex;
-  position: absolute;
-  top: 15%;
-  right: 11%;
-  width: 75%;
-  height: 60%;
-  border: #cdc9c8 solid 1px;
-}
-
-.chatBox {
-  display: flex;
-  position: absolute;
-  top: 77%;
-  right: 11%;
-  width: 75%;
-  height: 8%;
-  border: #cdc9c8 solid 1px;
-}
-
-.submitButton {
-  display: flex;
-  position: absolute;
-  width: 16%;
-  height: 6%;
-  top: 86%;
-  right: 11%;
-  border-radius: 10px 10px 10px 10px;
-  font-size: 17px;
-  color: white;
-  justify-content: center;
-  align-items: center;
-  background-color: #33b221;
+  width: 30%;
+  height: 90%;
   border: #cdc9c8 solid 1px;
 }
 
 .sessionIdSubmitButton {
-  display: flex;
-  position: absolute;
   width: 15%;
-  height: 5%;
-  top: 9%;
-  right: 55%;
-  border-radius: 10px 10px 10px 10px;
+  height: 90%;
+  border-radius: 10px;
   font-size: 17px;
   color: white;
   justify-content: center;
   align-items: center;
-  background-color: #33b221;
+  background-color: #299cdf;
   border: #cdc9c8 solid 1px;
   font-size: 12px;
+  font-weight: bold;
+}
+
+.currentID {
+  font-size: 17px;
+  font-family:Arial, Helvetica, sans-serif
+}
+
+.interviewWrapper {
+  
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 95%; /* This width might conflict with .outsideAiContainer's positioning/width, review overall layout */
+  height: 550px;
+}
+
+.mainChatContainer {
+  display: flex;
+  flex-direction: column;
+  width: 95%; /* Increased width from 75% to 85% */
+  height: 425px;
+  border: #cdc9c8 solid 1px;
+  padding: 10px;
+  overflow-y: auto;
+  gap: 8px; /* Adds space between messages without needing margin-bottom */
+}
+
+.chatBox {
+  width: 95%; /* Increased width to match mainChatContainer */
+  height: 12%;
+  border: #cdc9c8 solid 1px;
+  padding: 0 10px; /* Add horizontal padding to input */
+  
+}
+
+.submitButton {
+  width: 15%; /* Kept relatively consistent, can be adjusted */
+  height: 12%; /* Adjusted to be slightly larger */
+  top: 86%; /* Positioned below chat box */
+  right: 5%; /* Aligned with chat box and main container */
+  border-radius: 10px;
+  font-size: 13px;
+  color: white;
+  background-color: #299cdf;
+  border: #cdc9c8 solid 1px;
+  margin-left: 10px;
+  margin-top: 5px;
+}
+
+
+
+/* --- Message Styling for Color Differences --- */
+.userMessage {
+  background-color: #5ecc09bd; /* Light green for user messages (like WhatsApp) */
+  border-radius: 10px;
+  padding: 8px 12px; /* Slightly more horizontal padding */
+  align-self: flex-end; /* Pushes user messages to the right within flex container */
+  max-width: 75%; /* Limit width of message bubbles */
+  word-wrap: break-word; /* Ensure long words wrap */
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1); /* Subtle shadow for bubble effect */
+  color: white;
+  font-weight: bold;
+}
+
+.advisorMessage {
+  background-color: #119ae9de; /* Light gray for advisor messages */
+  border-radius: 10px;
+  padding: 8px 12px;
+  align-self: flex-start; /* Pushes advisor messages to the left within flex container */
+  max-width: 75%; /* Limit width of message bubbles */
+  word-wrap: break-word;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1); /* Subtle shadow for bubble effect */
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+}
+
+.chatPlaceholder {
+  color: #777;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+  flex-grow: 1; /* Allow placeholder to take up space, centering it vertically */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
